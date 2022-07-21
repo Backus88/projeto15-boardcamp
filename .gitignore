@@ -1,0 +1,5 @@
+node_modules
+database-boardcamp
+.env
+.eslintrc.json
+.vscode/settings.json
