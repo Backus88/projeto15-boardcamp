@@ -12,15 +12,13 @@ export async function getCategories(req, res){
 export async function insertCategories(req, res){
   const {name} = req.body;
 
-  console.log(name);
   if(name?.length ===0|| !name){
     res.sendStatus(400);
     return;
   }
   try{
     const nameExist = await client.query('SELECT * FROM categories WHERE name = $1', [name]);
-    console.log(nameExist);
-    if(nameExist.rowCount){
+    if(nameExist.rowCount>0){
       res.sendStatus(409);
       return;
     }
