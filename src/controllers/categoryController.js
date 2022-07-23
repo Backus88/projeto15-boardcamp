@@ -25,7 +25,7 @@ export async function insertCategories(req, res){
     await client.query('INSERT INTO categories (name) VALUES ($1)', [name]);
     res.sendStatus(201);
   }catch(error){
-    res.send(error).status(404);
+    res.status(404).send(error);
   }
 
 }
