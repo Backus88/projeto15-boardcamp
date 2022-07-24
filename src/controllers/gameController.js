@@ -27,7 +27,7 @@ export async function listGames(req, res){
   try{
     const { rows: games } = await client.query('SELECT games.id, games.name, games.image,games."stockTotal", games."categoryId", games."pricePerDay", categories.name as categoryName FROM categories RIGHT JOIN  games ON categories.id = games."categoryId"');
     if(nameGame?.length> 0){
-      const filterGames = games.filter((item)=> item.name.toLowerCase().includes(nameGame.toLowerCase()));
+      const filterGames = games.filter((item)=> item.name.toLowerCase().startsWith(nameGame.toLowerCase()));
       res.status(200).send(filterGames);
       return;
     }

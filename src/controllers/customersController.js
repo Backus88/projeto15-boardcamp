@@ -24,7 +24,6 @@ export async function updateCustomer(req, res){
   try{
     const thereIsCpf = await client.query('SELECT * FROM customers WHERE cpf = $1',[ cpf ]);
     const actualCpf = thereIsCpf.rows.some((item)=> item.cpf === cpf);
-    console.log(actualCpf);
     if(thereIsCpf.rowCount >0 && !actualCpf){
       res.sendStatus(409);
       return;
@@ -42,7 +41,7 @@ export async function listCustomers(req, res){
   try{
     const {rows : clients} = await client.query('SELECT * FROM customers');
     if(clientCpf?.length > 0){
-      const filterCpf = clients.filter((item)=> item.cpf.contains(clientCpf));
+      const filterCpf = clients.filter((item)=> item.cpf.startsWith(clientCpf));
       res.status(200).send(filterCpf);
       return;
     }
