@@ -5,7 +5,7 @@ export async function getCategories(req, res){
     const {rows : categories} = await client.query('SELECT * FROM categories');
     res.send(categories).status(200);
   }catch(error){
-    res.send(error).status(404);
+    res.send(error).status(500);
   }
 }
 
@@ -25,7 +25,7 @@ export async function insertCategories(req, res){
     await client.query('INSERT INTO categories (name) VALUES ($1)', [name]);
     res.sendStatus(201);
   }catch(error){
-    res.status(404).send(error);
+    res.status(500).send(error);
   }
 
 }

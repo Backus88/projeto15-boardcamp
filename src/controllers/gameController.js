@@ -17,7 +17,7 @@ export async function insertGame (req, res){
       res.sendStatus(400);
     }
   }catch(error){
-    res.status(404).send(error);
+    res.status(500).send(error);
   }
 }
 
@@ -28,13 +28,12 @@ export async function listGames(req, res){
     const { rows: games } = await client.query('SELECT games.id, games.name, games.image,games."stockTotal", games."categoryId", games."pricePerDay", categories.name as categoryName FROM categories RIGHT JOIN  games ON categories.id = games."categoryId"');
     if(nameGame?.length> 0){
       const filterGames = games.filter((item)=> item.name.toLowerCase().includes(nameGame.toLowerCase()));
-      console.log(filterGames);
       res.status(200).send(filterGames);
       return;
     }
     res.status(200).send(games);
   }catch(error){
-    res.status(404).send(error);
+    res.status(500).send(error);
   }
 
 }
