@@ -45,7 +45,7 @@ export async function listRentals (req, res){
       'rentDate', "rentDate",
       'daysRented', "daysRented",
       'returnDate', "returnDate",
-      'OriginalPrice', "originalPrice",
+      'originalPrice', "originalPrice",
       'delayFee', "delayFee",
       'customer', json_build_object(
           'id', customer.id,
@@ -77,7 +77,7 @@ export async function listRentals (req, res){
       res.status(200).send(newList.filter((item)=> item.gameId === newGameId ));
       return;
     }
-
+  
     res.status(200).send(newList);
   }catch(error){
     res.status(500).send(error);
@@ -117,7 +117,7 @@ export async function finishRent (req, res){
       delayFee: lateFee
     };
 
-    console.log(rentalObject);
+  
 
     await client.query(`UPDATE rentals SET 
                           "customerId" = $1, 
