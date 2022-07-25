@@ -84,7 +84,7 @@ export async function listRentals (req, res){
   }
 }
 
-export async function finishRental (req, res){
+export async function finishRent (req, res){
   const rentalId = parseInt(req.params.id);
   let lateFee = null;
 
@@ -94,7 +94,7 @@ export async function finishRental (req, res){
       res.sendStatus(404);
       return;
     }
-    const rentalIsFinished = thereIsId.rows.some(item => item.delayFee === null);
+    const rentalIsFinished = thereIsId.rows.some(item => item.returnDate === null);
     const rentalInfo = thereIsId.rows[0];
     if(!rentalIsFinished){
       res.sendStatus(400);
@@ -135,4 +135,27 @@ export async function finishRental (req, res){
     res.status(500).send(error);
   }
 
+}
+
+export async function deleteRent (req, res){
+  const rentalId = parseInt(req.params.id);
+
+  try{
+    const thereIsId = await client.query('SELECT * FROM rentals WHERE id = $1', [rentalId]);
+    if(thereIsId.rowCount ===0){
+      res.sendStatus(404);
+      return;
+    }
+    const rentalIsFinished = thereIsId.rows.some(item => item.returnDate === null);
+    if(!rentalIsFinished){
+      res.sendStatus(400);
+      return;
+    }
+
+    await client.query('DELETE FROM rentals WHERE id =$1', [rentalId]);
+    res.sendStatus(200);
+
+  }catch(error){
+    res.status(500).send(error);
+  }
 }
