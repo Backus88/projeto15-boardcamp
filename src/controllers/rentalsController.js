@@ -147,7 +147,7 @@ export async function deleteRent (req, res){
       return;
     }
     const rentalIsFinished = thereIsId.rows.some(item => item.returnDate === null);
-    if(!rentalIsFinished){
+    if(rentalIsFinished){
       res.sendStatus(400);
       return;
     }
