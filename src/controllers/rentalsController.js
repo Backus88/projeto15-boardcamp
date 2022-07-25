@@ -36,3 +36,57 @@ export async function insertRent (req, res){
     res.status(500).send(error);
   }
 }
+
+export async function listRentals (req, res){
+  const newList = [];
+  const newCustomerId = parseInt(req.query.customerId);
+  const newGameId = parseInt(req.query.gameId);
+
+  try{
+    const {rows: rentals} = await client.query(`
+    SELECT json_build_object(
+      'id', rental.id,
+      'customerId', "customerId",
+      'gameId', "gameId",
+      'rentDate', "rentDate",
+      'daysRented', "daysRented",
+      'returnDate', "returnDate",
+      'OriginalPrice', "originalPrice",
+      'delayFee', "delayFee",
+      'customer', json_build_object(
+          'id', customer.id,
+          'name', customer.name
+          ),
+
+      'game', json_build_object(
+          'id', game.id,
+          'name', game.name,
+          'categoryId', game."categoryId",
+          'categoryName', category.name
+          )
+    ) 
+    FROM rentals rental
+    JOIN games game on game.id = "gameId"
+    JOIN customers customer on customer.id = "customerId"
+    JOIN categories category on category.id = game."categoryId"
+    `);
+    
+    for( const v of rentals ){
+      newList.push(v.json_build_object);
+    }
+    if (newCustomerId){
+      res.status(200).send(newList.filter((item)=> item.customerId === newCustomerId ));
+      return;
+    }
+
+    if (newGameId){
+      res.status(200).send(newList.filter((item)=> item.gameId === newGameId ));
+      return;
+    }
+
+    console.log(newList);
+    res.status(200).send(newList);
+  }catch(error){
+    res.status(500).send(error);
+  }
+}
